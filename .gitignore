@@ -1,0 +1,16 @@
+# Environments
+venv/
+.env
+
+# Model Weights (Too large for GitHub)
+checkpoints/
+*.pt
+*.safetensors
+*.joblib
+
+# Data and Logs
+data/cache/
+logs/
+__pycache__/
+*.zip
+.DS_Store

@@ -1,0 +1,61 @@
+# configs/config.yaml
+# Central configuration for all hyperparameters and paths
+
+data:
+  dataset_name: "ag_news"          # HuggingFace dataset identifier
+  num_classes: 4
+  class_names: ["World", "Sports", "Business", "Sci/Tech"]
+  max_seq_len: 128                  # Max tokens per sample
+  test_size: 0.1                    # Fraction of train split used for validation
+  random_seed: 42
+
+paths:
+  data_dir: "data/cache"
+  checkpoint_dir: "checkpoints"
+  logs_dir: "logs"
+  results_dir: "results"
+
+vocab:
+  max_vocab_size: 50000
+  min_freq: 2                       # Minimum token frequency to include
+  pad_token: "<PAD>"
+  unk_token: "<UNK>"
+
+bilstm:
+  embed_dim: 256
+  hidden_dim: 256                   # Per-direction hidden size
+  num_layers: 2
+  dropout: 0.4
+  bidirectional: true
+  attention_heads: 1                # Single-head self-attention
+  batch_size: 64
+  epochs: 10
+  learning_rate: 1.0e-3
+  weight_decay: 1.0e-4
+  clip_grad_norm: 1.0
+  scheduler: "cosine"               # "cosine" | "step" | "none"
+  warmup_steps: 200
+
+bert:
+  model_name: "bert-base-uncased"
+  max_seq_len: 128
+  batch_size: 32
+  epochs: 4
+  learning_rate: 2.0e-5
+  weight_decay: 0.01
+  warmup_ratio: 0.1
+  fp16: true                        # Mixed precision (requires CUDA)
+  gradient_accumulation_steps: 1
+
+tfidf:
+  max_features: 50000
+  ngram_range: [1, 2]
+  sublinear_tf: true
+  classifier: "logistic_regression"
+  lr_C: 5.0
+  lr_max_iter: 1000
+
+training:
+  early_stopping_patience: 3
+  save_best_only: true
+  log_every_n_steps: 100
