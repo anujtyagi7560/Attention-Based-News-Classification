@@ -1,84 +1,63 @@
-# Attention-Based News Classification
+# 📰 Attention-Based News Classification
 
-Multi-category news classification using:
-- **Custom BiLSTM + Self-Attention** model
-- **Fine-tuned BERT** via Hugging Face Transformers
-- **TF-IDF Baseline** for comparison
+[![Python](https://img.shields.io/badge/Python-3.9+-blue.svg)](https://www.python.org/downloads/)
+[![PyTorch](https://img.shields.io/badge/PyTorch-2.0+-red.svg)](https://pytorch.org/)
+[![Streamlit](https://img.shields.io/badge/Streamlit-App-FF4B4B.svg)](https://streamlit.io/)
 
-Evaluated on the [AG News](https://huggingface.co/datasets/ag_news) dataset (4 categories: World, Sports, Business, Sci/Tech).
+A comprehensive NLP system that classifies news headlines into four categories: **World, Sports, Business, and Sci/Tech**. This project implements a full machine learning lifecycle—from raw text preprocessing to a live web application deployment.
 
----
+## 🚀 Project Overview
 
-## Results Summary
+The core of this project is a comparative analysis of three architectural approaches to Natural Language Processing. The goal was to observe how moving from frequency-based models to deep contextual models impacts accuracy and error reduction.
 
-| Model              | Macro F1 | Accuracy |
-|--------------------|----------|----------|
-| TF-IDF + LogReg    | ~0.76    | ~76%     |
-| BiLSTM + Attention | ~0.94    | ~94%     |
-| BERT Fine-tuned    | ~0.96    | ~96%     |
+### 🧠 The Models
+1.  **TF-IDF + Logistic Regression**: A statistical baseline that treats text as a "bag of words."
+2.  **BiLSTM with Additive Attention**: A custom neural network that captures sequential dependencies and uses an attention mechanism to focus on key informative tokens.
+3.  **BERT Fine-Tuning**: A transformer-based approach (`bert-base-uncased`) that leverages pre-trained semantic knowledge for state-of-the-art results.
 
 ---
 
-## Project Structure
+## 📊 Performance Benchmark
 
-```
-news-classifier/
-├── configs/
-│   └── config.yaml              # All hyperparameters & paths
-├── data/
-│   ├── dataset.py               # Dataset classes (PyTorch)
-│   └── preprocessing.py         # Tokenization, vocab, cleaning
-├── models/
-│   ├── attention.py             # Self-attention mechanism
-│   ├── bilstm_attention.py      # BiLSTM + Attention classifier
-│   ├── bert_classifier.py       # BERT fine-tuning wrapper
-│   └── tfidf_baseline.py        # TF-IDF + LogReg baseline
-├── training/
-│   ├── trainer.py               # Generic training loop
-│   └── bert_trainer.py          # HuggingFace Trainer wrapper
-├── evaluation/
-│   └── evaluator.py             # Metrics, confusion matrix, reports
-├── utils/
-│   ├── logger.py                # Logging setup
-│   └── helpers.py               # Seed, device, checkpoint utils
-├── scripts/
-│   ├── train_bilstm.py          # Train BiLSTM+Attention
-│   ├── train_bert.py            # Fine-tune BERT
-│   ├── train_baseline.py        # Train TF-IDF baseline
-│   └── compare_models.py        # Compare all models
-├── tests/
-│   ├── test_attention.py
-│   ├── test_dataset.py
-│   └── test_models.py
-├── notebooks/
-│   └── exploration.ipynb        # EDA & results visualization
-├── requirements.txt
-└── setup.py
-```
+| Model Architecture | Accuracy | Macro F1-Score | Error Reduction vs. Baseline |
+| :--- | :---: | :---: | :---: |
+| **TF-IDF Baseline** | 92.17% | 0.9216 | - |
+| **BiLSTM + Attention** | 92.66% | 0.9265 | **+6.2%** |
+| **Fine-tuned BERT** | **~94.5%** | **0.944** | **~30.0%** |
 
 ---
 
-## Quick Start
+## 📈 Deep Dive: BiLSTM + Self-Attention
 
-```bash
-# 1. Install dependencies
-pip install -r requirements.txt
+While BERT provides the highest accuracy, the **BiLSTM + Attention** model is the technical heart of this project. Unlike standard RNNs, this model uses a **Bidirectional** approach to understand context from both the start and end of a headline. 
 
-# 2. Train TF-IDF baseline
-python scripts/train_baseline.py
+The **Additive Attention** layer allows the model to assign weights to words, essentially "learning" that words like *'IPO'* or *'Stock'* are more important for Business news than common stop-words.
 
-# 3. Train BiLSTM + Attention
-python scripts/train_bilstm.py
+### Training Progress
+Below are the training and validation curves for the BiLSTM model, showing smooth convergence and successful learning without significant overfitting:
 
-# 4. Fine-tune BERT
-python scripts/train_bert.py
-
-# 5. Compare all models
-python scripts/compare_models.py
-```
+![BiLSTM Training Curves](./results/bilstm_training_curves.png)
 
 ---
 
-## Configuration
+## 💻 Web Application Interface
 
-All hyperparameters live in `configs/config.yaml`. No hardcoded values anywhere in the codebase.
+I developed a real-time web interface using **Streamlit**. This allows users to input any news headline and receive an instant classification and confidence score from the fine-tuned BERT engine.
+
+### How to run the App:
+1. Ensure you have the dependencies installed: `pip install -r requirements.txt`
+2. Run the command: `streamlit run app.py`
+
+---
+
+## 📂 Project Structure
+
+```text
+├── app.py                # Streamlit Web Application
+├── checkpoints/          # Trained model weights (.pt, .safetensors)
+├── configs/              # Hyperparameter settings (config.yaml)
+├── data/                 # Preprocessing logic & datasets
+├── evaluation/           # Performance scripts & comparison logic
+├── models/               # Model architectures (BERT, BiLSTM, TF-IDF)
+├── results/              # Metrics, plots, and JSON reports
+└── scripts/              # Training execution scripts
